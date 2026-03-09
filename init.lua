@@ -423,6 +423,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+  "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/mrcjkb/rustaceanvim",
   "https://github.com/jiaoshijie/undotree",
   "https://github.com/lukas-reineke/indent-blankline.nvim",
@@ -465,6 +466,9 @@ packadd("blink.cmp")
 packadd("LuaSnip")
 -- rust
 packadd("rustaceanvim")
+-- flutter prerequesite
+packadd("plenary.nvim")
+
 
 -- colorscheme
 packadd("flexoki-neovim")

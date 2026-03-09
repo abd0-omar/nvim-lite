@@ -270,6 +270,8 @@ vim.g.maplocalleader = " " -- space for localleader
 -- 	return vim.v.count == 0 and "gk" or "k"
 -- end, { expr = true, silent = true, desc = "Up (wrap-aware)" })
 
+vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "better save" })
+
 vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })

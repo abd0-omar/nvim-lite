@@ -420,6 +420,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+  "https://github.com/lukas-reineke/indent-blankline.nvim",
   "https://github.com/kepano/flexoki-neovim",
 	"https://www.github.com/lewis6991/gitsigns.nvim",
 	"https://www.github.com/echasnovski/mini.nvim",
@@ -449,6 +450,7 @@ packadd("gitsigns.nvim")
 packadd("mini.nvim")
 packadd("fzf-lua")
 packadd("nvim-tree.lua")
+packadd("indent-blankline.nvim")
 -- LSP
 packadd("nvim-lspconfig")
 packadd("mason.nvim")
@@ -590,6 +592,28 @@ require("mini.trailspace").setup({})
 require("mini.bufremove").setup({})
 require("mini.notify").setup({})
 require("mini.icons").setup({})
+
+require("ibl").setup({
+	indent = {
+		char = "|", -- The thin vertical line
+		tab_char = "|",
+	},
+	scope = {
+		enabled = true,
+		show_start = false, -- Don't show a line at the top of the block
+		show_end = false,   -- Don't show a line at the bottom
+		highlight = { "Function", "Label" }, -- Use theme colors for the active scope
+	},
+	exclude = {
+		filetypes = {
+			"help",
+			"terminal",
+			"lazy",
+			"nvim-tree",
+			"fzf",
+		},
+	},
+})
 
 require("gitsigns").setup({
 	signs = {

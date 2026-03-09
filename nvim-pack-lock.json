@@ -17,6 +17,10 @@
       "rev": "c3e2251e813d29d885a7cbbe9808a7af234d845d",
       "src": "https://github.com/kepano/flexoki-neovim"
     },
+    "flutter-tools.nvim": {
+      "rev": "677cc07c16e8b89999108d2ebeefcfc5f539b73c",
+      "src": "https://github.com/nvim-flutter/flutter-tools.nvim"
+    },
     "fzf-lua": {
       "rev": "d9508cc1d05ffcdc91a32dfd38fc1013a56b20da",
       "src": "https://www.github.com/ibhagwan/fzf-lua"

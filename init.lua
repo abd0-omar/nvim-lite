@@ -346,6 +346,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		"*.cpp",
 		"*.h",
 		"*.hpp",
+    "*.dart"
 	},
 	callback = function(args)
 		-- avoid formatting non-file buffers (helps prevent weird write prompts)
@@ -423,6 +424,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+  "https://github.com/nvim-flutter/flutter-tools.nvim",
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/mrcjkb/rustaceanvim",
   "https://github.com/jiaoshijie/undotree",
@@ -468,6 +470,8 @@ packadd("LuaSnip")
 packadd("rustaceanvim")
 -- flutter prerequesite
 packadd("plenary.nvim")
+-- flutter
+packadd("flutter-tools.nvim")
 
 
 -- colorscheme
@@ -504,6 +508,7 @@ local setup_treesitter = function()
 		"bash",
 		"lua",
 		"python",
+    "dart"
 	}
 
 	local config = require("nvim-treesitter.config")

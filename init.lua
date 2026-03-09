@@ -127,17 +127,12 @@ vim.opt.maxmempattern = 20000                        -- increase max memory
 -- STATUSLINE
 -- ============================================================================
 
--- Git branch function with caching and Nerd Font icon
-local cached_branch = ""
-local last_check = 0
+-- Git branch function with"out" caching and Nerd Font icon
 local function git_branch()
-  local now = vim.loop.now()
-  if now - last_check > 5000 then -- Check every 5 seconds
-    cached_branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
-    last_check = now
-  end
-  if cached_branch ~= "" then
-    return " \u{e725} " .. cached_branch .. " " -- nf-dev-git_branch
+  -- Gitsigns automatically populates this variable for the current buffer
+  local branch = vim.b.gitsigns_head
+  if branch and branch ~= "" then
+    return " \u{e725} " .. branch .. " "
   end
   return ""
 end

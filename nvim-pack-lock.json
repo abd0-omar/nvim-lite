@@ -13,6 +13,10 @@
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
     },
+    "crates.nvim": {
+      "rev": "ac9fa498a9edb96dc3056724ff69d5f40b898453",
+      "src": "https://github.com/Saecki/crates.nvim"
+    },
     "efmls-configs-nvim": {
       "rev": "0b0ca5462a0a9c1233cc8359e64741d7d49fbbe4",
       "src": "https://github.com/creativenull/efmls-configs-nvim"

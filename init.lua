@@ -513,6 +513,22 @@ vim.g.rustaceanvim = {
 }
 
 -- ============================================================================
+-- CRATES CONFIG
+-- ============================================================================
+require('crates').setup({
+  lsp = {
+    enabled = true,
+    -- client, bufnr
+    on_attach = function(_, _)
+      -- You can add specific crates keymaps here if you'd like
+    end,
+    actions = true,
+    completion = true,
+    hover = true,
+  },
+})
+
+-- ============================================================================
 -- PLUGIN CONFIGS
 -- ============================================================================
 

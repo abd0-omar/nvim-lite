@@ -13,6 +13,10 @@
       "rev": "0b0ca5462a0a9c1233cc8359e64741d7d49fbbe4",
       "src": "https://github.com/creativenull/efmls-configs-nvim"
     },
+    "flexoki-neovim": {
+      "rev": "c3e2251e813d29d885a7cbbe9808a7af234d845d",
+      "src": "https://github.com/kepano/flexoki-neovim"
+    },
     "fzf-lua": {
       "rev": "d9508cc1d05ffcdc91a32dfd38fc1013a56b20da",
       "src": "https://www.github.com/ibhagwan/fzf-lua"

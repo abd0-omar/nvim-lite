@@ -1,5 +1,5 @@
 vim.opt.termguicolors = true
-vim.cmd.colorscheme("habamax")
+-- vim.cmd.colorscheme("habamax")
 
 local function set_transparent() -- set UI component to transparent
 	local groups = {
@@ -22,7 +22,7 @@ local function set_transparent() -- set UI component to transparent
 	vim.api.nvim_set_hl(0, "TabLineFill", { bg = "none", fg = "#767676" })
 end
 
-set_transparent()
+-- set_transparent()
 
 -- ============================================================================
 -- OPTIONS
@@ -262,13 +262,13 @@ setup_dynamic_statusline()
 vim.g.mapleader = " " -- space for leader
 vim.g.maplocalleader = " " -- space for localleader
 
--- better movement in wrapped text
-vim.keymap.set("n", "j", function()
-	return vim.v.count == 0 and "gj" or "j"
-end, { expr = true, silent = true, desc = "Down (wrap-aware)" })
-vim.keymap.set("n", "k", function()
-	return vim.v.count == 0 and "gk" or "k"
-end, { expr = true, silent = true, desc = "Up (wrap-aware)" })
+-- -- better movement in wrapped text
+-- vim.keymap.set("n", "j", function()
+-- 	return vim.v.count == 0 and "gj" or "j"
+-- end, { expr = true, silent = true, desc = "Down (wrap-aware)" })
+-- vim.keymap.set("n", "k", function()
+-- 	return vim.v.count == 0 and "gk" or "k"
+-- end, { expr = true, silent = true, desc = "Up (wrap-aware)" })
 
 vim.keymap.set("n", "<leader>c", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
@@ -420,6 +420,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+  "https://github.com/kepano/flexoki-neovim",
 	"https://www.github.com/lewis6991/gitsigns.nvim",
 	"https://www.github.com/echasnovski/mini.nvim",
 	"https://www.github.com/ibhagwan/fzf-lua",
@@ -456,7 +457,11 @@ packadd("blink.cmp")
 packadd("LuaSnip")
 
 -- colorscheme
--- packadd("flexoki-neovim")
+packadd("flexoki-neovim")
+
+-- Set the colorscheme (choose "flexoki", "flexoki-dark", or "flexoki-light")
+vim.opt.background = "dark" -- or "light"
+vim.cmd.colorscheme("flexoki")
 
 -- ============================================================================
 -- PLUGIN CONFIGS
@@ -559,7 +564,23 @@ vim.keymap.set("n", "<leader>fX", function()
 end, { desc = "FZF Diagnostics Workspace" })
 
 require("mini.ai").setup({})
-require("mini.comment").setup({})
+require("mini.comment").setup({
+  mappings = {
+    -- Toggle comment (like `gcip` - comment inner paragraph) for both
+    -- Normal and Visual modes
+    comment = '<C-_>',
+
+    -- Toggle comment on current line
+    comment_line = '<C-_>',
+
+    -- Toggle comment on visual selection
+    comment_visual = '<C-_>',
+
+    -- Define 'comment' textobject (like `dgc` - delete whole comment block)
+    -- Works also in Visual mode if mapping differs from `comment_visual`
+    textobject = '<C-_>',
+  },
+})
 require("mini.move").setup({})
 require("mini.surround").setup({})
 require("mini.cursorword").setup({})

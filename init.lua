@@ -405,6 +405,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+  "https://github.com/aznhe21/actions-preview.nvim",
   "https://github.com/nvim-flutter/flutter-tools.nvim",
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/mrcjkb/rustaceanvim",
@@ -453,7 +454,8 @@ packadd("rustaceanvim")
 packadd("plenary.nvim")
 -- flutter
 packadd("flutter-tools.nvim")
-
+-- code action preview
+packadd("actions-preview.nvim")
 
 -- colorscheme
 packadd("flexoki-neovim")
@@ -722,7 +724,10 @@ local function lsp_on_attach(ev)
     vim.lsp.buf.definition()
   end, opts)
 
-  vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
+  vim.keymap.set({ "n", "v" }, "<leader>a", function()
+    require("actions-preview").code_actions()
+  end, opts)
+
   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
 
   vim.keymap.set("n", "<leader>D", function()

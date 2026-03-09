@@ -270,7 +270,7 @@ vim.g.maplocalleader = " " -- space for localleader
 -- 	return vim.v.count == 0 and "gk" or "k"
 -- end, { expr = true, silent = true, desc = "Up (wrap-aware)" })
 
-vim.keymap.set("n", "<leader>c", ":nohlsearch<CR>", { desc = "Clear search highlights" })
+vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
@@ -421,6 +421,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+  "https://github.com/jiaoshijie/undotree",
   "https://github.com/lukas-reineke/indent-blankline.nvim",
   "https://github.com/kepano/flexoki-neovim",
 	"https://www.github.com/lewis6991/gitsigns.nvim",
@@ -452,6 +453,7 @@ packadd("mini.nvim")
 packadd("fzf-lua")
 packadd("nvim-tree.lua")
 packadd("indent-blankline.nvim")
+packadd("undotree")
 -- LSP
 packadd("nvim-lspconfig")
 packadd("mason.nvim")
@@ -656,6 +658,8 @@ vim.keymap.set("n", "<leader>hd", function()
 	require("gitsigns").diffthis()
 end, { desc = "Diff this" })
 
+-- undotree
+vim.keymap.set('n', '<leader>u', require('undotree').toggle, { noremap = true, silent = true })
 -- ============================================================================
 -- LSP, Linting, Formatting & Completion
 -- ============================================================================

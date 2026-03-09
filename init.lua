@@ -1,6 +1,19 @@
 vim.opt.termguicolors = true
 -- vim.cmd.colorscheme("habamax")
 
+-- -- Override search highlights (Put this after colorscheme "flexoki")
+-- local function override_search_colors()
+--   -- Flexoki Blue: #4385be
+--   -- Search: Muted background with blue text
+--   vim.api.nvim_set_hl(0, "Search", { bg = "#282726", fg = "#4385be", bold = true, underline = true })
+--
+--   -- CurSearch: Solid blue background with dark text
+--   vim.api.nvim_set_hl(0, "CurSearch", { bg = "#4385be", fg = "#100f0f", bold = true })
+--   vim.api.nvim_set_hl(0, "IncSearch", { link = "CurSearch" })
+-- end
+--
+-- override_search_colors()
+--
 -- local function set_transparent() -- set UI component to transparent
 -- 	local groups = {
 -- 		"Normal",
@@ -401,10 +414,27 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.spell = true
   end,
 })
+
+-- Create an autocommand to force these colors every time the theme loads
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "flexoki*",
+  callback = function()
+    -- Search: Muted Blue (way less yellow)
+    vim.api.nvim_set_hl(0, "Search", { bg = "#343b58", fg = "#4385be", bold = true })
+
+    -- CurSearch: Pink/Magenta so it's obvious where you are
+    vim.api.nvim_set_hl(0, "CurSearch", { bg = "#ce5d97", fg = "#100f0f", bold = true })
+
+    -- IncSearch: Links to CurSearch for consistency
+    vim.api.nvim_set_hl(0, "IncSearch", { link = "CurSearch" })
+  end,
+})
+
 -- ============================================================================
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+  "https://github.com/Saecki/crates.nvim",
   "https://github.com/aznhe21/actions-preview.nvim",
   "https://github.com/nvim-flutter/flutter-tools.nvim",
   "https://github.com/nvim-lua/plenary.nvim",
@@ -450,6 +480,7 @@ packadd("blink.cmp")
 packadd("LuaSnip")
 -- rust
 packadd("rustaceanvim")
+packadd("crates.nvim")
 -- flutter prerequesite
 packadd("plenary.nvim")
 -- flutter
@@ -463,6 +494,28 @@ packadd("flexoki-neovim")
 -- Set the colorscheme (choose "flexoki", "flexoki-dark", or "flexoki-light")
 vim.opt.background = "dark" -- or "light"
 vim.cmd.colorscheme("flexoki")
+
+-- ============================================================================
+-- RUST OPTIMIZATIONS (rust-analyzer)
+-- ============================================================================
+vim.g.rustaceanvim = {
+  server = {
+    settings = {
+      ["rust-analyzer"] = {
+        -- 1. Use a separate profile to avoid locking 'target' directory
+        cargo = {
+          extraEnv = { CARGO_PROFILE_RUST_ANALYZER_INHERITS = "dev" },
+          extraArgs = { "--profile", "rust-analyzer" },
+        },
+        -- 2. Use 'cargo check' instead of 'clippy' for faster feedback
+        check = {
+          command = "check",
+          extraArgs = {},
+        },
+      },
+    },
+  },
+}
 
 -- ============================================================================
 -- PLUGIN CONFIGS
@@ -828,6 +881,7 @@ vim.lsp.config("bashls", {})
 vim.lsp.config("ts_ls", {})
 vim.lsp.config("gopls", {})
 vim.lsp.config("clangd", {})
+vim.lsp.config("taplo", {})
 
 do
   local luacheck = require("efmls-configs.linters.luacheck")
@@ -853,7 +907,7 @@ do
   vim.lsp.config("efm", {
     filetypes = {
       "c", "cpp", "css", "go", "html", "javascript", "javascriptreact",
-      "json", "jsonc", "lua", "markdown", "python", "sh",
+
       "typescript", "typescriptreact", "vue", "svelte",
     },
     init_options = { documentFormatting = true },
@@ -889,6 +943,7 @@ vim.lsp.enable({
   "gopls",
   "clangd",
   "efm",
+  "taplo"
 })
 
 -- ============================================================================

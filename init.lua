@@ -509,7 +509,8 @@ local setup_treesitter = function()
 		"bash",
 		"lua",
 		"python",
-    "dart"
+    "dart",
+    "rust"
 	}
 
 	local config = require("nvim-treesitter.config")

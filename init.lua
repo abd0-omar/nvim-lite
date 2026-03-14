@@ -292,8 +292,8 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
 vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
 vim.keymap.set({ "n", "v" }, "<leader>x", '"_d', { desc = "Delete without yanking" })
 
-vim.keymap.set("n", "<leader>]n", ":bnext<CR>", { desc = "Next buffer" })
-vim.keymap.set("n", "<leader>[p", ":bprevious<CR>", { desc = "Previous buffer" })
+vim.keymap.set("n", "gn", ":bnext<CR>", { desc = "Next buffer" })
+vim.keymap.set("n", "gp", ":bprevious<CR>", { desc = "Previous buffer" })
 
 -- vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 -- vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
@@ -429,6 +429,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 -- PLUGINS (vim.pack)
 -- ============================================================================
 vim.pack.add({
+  "https://github.com/j-morano/buffer_manager.nvim",
   "https://github.com/Saecki/crates.nvim",
   "https://github.com/aznhe21/actions-preview.nvim",
   "https://github.com/nvim-flutter/flutter-tools.nvim",
@@ -467,6 +468,7 @@ packadd("fzf-lua")
 packadd("nvim-tree.lua")
 packadd("indent-blankline.nvim")
 packadd("undotree")
+packadd("buffer_manager.nvim")
 -- LSP
 packadd("nvim-lspconfig")
 packadd("mason.nvim")
@@ -754,6 +756,41 @@ end, { desc = "Diff this" })
 
 -- undotree
 vim.keymap.set('n', '<leader>u', require('undotree').toggle, { noremap = true, silent = true })
+
+-- buffer_manager
+require("buffer_manager").setup({
+  select_menu_item_commands = {
+    v = {
+      key = "<C-v>",
+      command = "vsplit"
+    },
+    h = {
+      key = "<C-h>",
+      command = "split"
+    }
+  },
+  short_file_names = true,     -- Cleaner list (hides long paths)
+  show_depth = true,           -- But shows folder depth so you know where you are
+  loop_nav = false,            -- Matches your likely preference for linear navigation
+  highlight = 'Normal:Normal', -- Keep it consistent with your transparency
+  win_extra_options = {
+    winhighlight = 'Normal:Normal',
+  },
+})
+
+local bmui = require("buffer_manager.ui")
+local keys = '1234567890'
+
+for i = 1, #keys do
+  local key = keys:sub(i, i)
+  vim.keymap.set('n', string.format('<M-%s>', key), function()
+    bmui.nav_file(i)
+  end, { desc = "Jump to buffer " .. i })
+end
+
+vim.keymap.set('n', '<leader>b', function()
+  require('buffer_manager.ui').toggle_quick_menu()
+end, { desc = "Toggle buffer_manager" })
 -- ============================================================================
 -- LSP, Linting, Formatting & Completion
 -- ============================================================================

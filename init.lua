@@ -586,7 +586,36 @@ end
 
 setup_treesitter()
 
+local function my_on_attach_nvim_tree(bufnr)
+  local api = require("nvim-tree.api")
+
+  local function opts(desc)
+    return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+
+  -- Default mappings (optional, but recommended so you don't lose everything)
+  api.config.mappings.default_on_attach(bufnr)
+
+  -- Better "l" mapping:
+  -- If it's a directory, it expands it. If it's a file, it opens it (and closes the tree).
+  vim.keymap.set("n", "l", function()
+    local node = api.tree.get_node_under_cursor()
+    if node.nodes then
+      -- It's a directory, expand it
+      api.node.open.edit()
+    else
+      -- It's a file, open it and the 'quit_on_open' setting will handle the close
+      api.node.open.edit()
+    end
+  end, opts("Open or Expand"))
+
+  -- Better "h" mapping:
+  -- If the node is open, it closes it. If it's already closed, it moves to the parent.
+  vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("Close Directory"))
+end
+
 require("nvim-tree").setup({
+  on_attach = my_on_attach_nvim_tree,
   view = {
     width = 35,
   },
@@ -595,6 +624,11 @@ require("nvim-tree").setup({
   },
   renderer = {
     group_empty = true,
+  },
+  actions = {
+    open_file = {
+      quit_on_open = true,
+    },
   },
 })
 vim.keymap.set("n", "<leader>e", function()

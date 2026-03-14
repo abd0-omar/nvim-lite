@@ -282,7 +282,7 @@ vim.g.maplocalleader = " " -- space for localleader
 vim.keymap.set("n", "<C-q>", ":q<CR>", { desc = "better quit" })
 vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "better save" })
 
-vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>", { desc = "Clear search highlights" })
+vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
@@ -833,19 +833,31 @@ do
   end
 end
 
-local function lsp_on_attach(ev)
-  local client = vim.lsp.get_client_by_id(ev.data.client_id)
-  if not client then
-    return
+local function lsp_on_attach(client_or_ev, bufnr_or_nil)
+  local client
+  local bufnr
+
+  -- Check if called by LspAttach autocommand or directly by a plugin
+  if type(client_or_ev) == "table" and client_or_ev.data then
+    client = vim.lsp.get_client_by_id(client_or_ev.data.client_id)
+    bufnr = client_or_ev.buf
+  else
+    client = client_or_ev
+    bufnr = bufnr_or_nil
   end
 
-  local bufnr = ev.buf
+  if not client then return end
   local opts = { noremap = true, silent = true, buffer = bufnr }
 
-  -- inlay hint
+  -- ENABLE BY DEFAULT: Use the 'bufnr' variable here
   if client.server_capabilities.inlayHintProvider then
-    vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
+
+  -- Toggle keymap (keep as a backup)
+  vim.keymap.set("n", "<leader>th", function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+  end, { buffer = bufnr, desc = "Toggle Inlay Hints" })
 
   vim.keymap.set("n", "gd", function()
     require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
@@ -1116,3 +1128,61 @@ vim.keymap.set("t", "<Esc>", function()
     terminal_state.is_open = false
   end
 end, { noremap = true, silent = true, desc = "Close floating terminal" })
+
+-- ============================================================================
+-- FLUTTER / DART CONFIG (Move this to the bottom of the file)
+-- ============================================================================
+require("flutter-tools").setup({
+  lsp = {
+    on_attach = function(client, bufnr)
+      lsp_on_attach(client, bufnr)
+      -- Force enable again after 500ms just in case the server was slow
+      vim.defer_fn(function()
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        end
+      end, 500)
+    end,
+    capabilities = require("blink.cmp").get_lsp_capabilities(),
+    settings = {
+      showTodoComments = true,
+      completeFunctionCalls = true,
+      -- These three enable the actual "Type Hints" you're looking for
+      enableSdkFormatter = true,
+      includeExternalLibrariesInlays = true,
+      lsp = {
+        -- Specific inlay hint triggers for Dart
+        include_callback_and_function_body_labels = true,
+        include_parameter_name_hints = "all", -- options: "none", "non_literal", "all"
+        include_type_hints = true,
+      },
+    },
+  },
+})
+
+vim.keymap.set("n", "<leader>dy", function()
+  -- Get diagnostics for the current line
+  local line_num = vim.api.nvim_win_get_cursor(0)[1] - 1
+  local diagnostics = vim.diagnostic.get(0, { lnum = line_num })
+
+  if #diagnostics == 0 then
+    vim.notify("No diagnostics found on this line", vim.log.levels.INFO)
+    return
+  end
+
+  -- Concatenate messages if there are multiple
+  local messages = {}
+  for _, d in ipairs(diagnostics) do
+    table.insert(messages, d.message)
+  end
+  local content = table.concat(messages, "\n")
+
+  -- Set to system clipboard (+)
+  vim.fn.setreg("+", content)
+  vim.notify("Yanked diagnostic to clipboard!")
+end, { desc = "Yank diagnostic message" })
+--
+-- Add this inside your existing ColorScheme autocommand for flexoki*
+vim.api.nvim_set_hl(0, "LspInlayHint", { fg = "#878580", bg = "none", italic = true })
+
+vim.keymap.set('n', '<leader>c', ':bdelete<CR>', { desc = 'Delete Buffer' })

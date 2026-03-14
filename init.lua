@@ -681,7 +681,6 @@ require("mini.comment").setup({
     textobject = '<C-_>',
   },
 })
-require("mini.move").setup({})
 require("mini.surround").setup({})
 require("mini.cursorword").setup({})
 -- require("mini.indentscope").setup({})

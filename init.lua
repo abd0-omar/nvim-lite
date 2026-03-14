@@ -777,11 +777,11 @@ local function lsp_on_attach(ev)
     vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
   end
 
-  vim.keymap.set("n", "<leader>gd", function()
+  vim.keymap.set("n", "gd", function()
     require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
   end, opts)
 
-  vim.keymap.set("n", "<leader>gD", vim.lsp.buf.definition, opts)
+  vim.keymap.set("n", "gD", vim.lsp.buf.definition, opts)
 
   vim.keymap.set("n", "<leader>gS", function()
     vim.cmd("vsplit")
@@ -813,7 +813,7 @@ local function lsp_on_attach(ev)
   -- vim.keymap.set("n", "<leader>fd", function()
   -- 	require("fzf-lua").lsp_definitions({ jump_to_single_result = true })
   -- end, opts)
-  vim.keymap.set("n", "<leader>gr", function()
+  vim.keymap.set("n", "gr", function()
     require("fzf-lua").lsp_references()
   end, opts)
   -- vim.keymap.set("n", "<leader>ft", function()
@@ -855,8 +855,8 @@ require("blink.cmp").setup({
     preset = "none",
     ["<C-Space>"] = { "show", "hide" },
     ["<CR>"] = { "accept", "fallback" },
-    ["<C-j>"] = { "select_next", "fallback" },
-    ["<C-k>"] = { "select_prev", "fallback" },
+    ["<C-n>"] = { "select_next", "fallback" },
+    ["<C-p>"] = { "select_prev", "fallback" },
     ["<Tab>"] = { "snippet_forward", "fallback" },
     ["<S-Tab>"] = { "snippet_backward", "fallback" },
   },
